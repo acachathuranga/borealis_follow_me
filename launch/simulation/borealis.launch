@@ -1,0 +1,34 @@
+<launch>
+  <!--  Turtlebot_kinect_lidar Gazebo simulation -->
+  <include file="$(find turtlebot_custom)/launch/Borealis/borealis_turtlebot_gazebo.launch"/>
+
+  <!-- Simulation Robot Pose Publisher -->
+  <node pkg="follow_me" type="pose_publisher.py" name="gazebo_pose_publisher" output="screen"/>
+
+  <!--  Custom Rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find follow_me)/launch/simulation/simulation.rviz"/>
+
+  <!--  Teleop joystick PS4 -->
+  <include file="$(find follow_me)/launch/simulation/ps4_joystick.launch"/>
+
+  <!-- Pose to Path publisher -->
+  <include file="$(find pose_to_path)/launch/pose_to_path.launch"/>
+
+
+  <!-- UAV1 Follower -->
+  <node pkg="follow_me" type="follow_me.py" name="uav1_follow_me" output="screen">
+      <rosparam command="load" file="$(find follow_me)/config/config1.yaml" />
+  </node>
+
+  <!-- UAV2 Follower -->
+  <node pkg="follow_me" type="follow_me.py" name="uav2_follow_me" output="screen">
+      <rosparam command="load" file="$(find follow_me)/config/config2.yaml" />
+  </node>
+
+  <!-- UAV3 Follower -->
+  <node pkg="follow_me" type="follow_me.py" name="uav3_follow_me" output="screen">
+      <rosparam command="load" file="$(find follow_me)/config/config3.yaml" />
+  </node>
+
+  
+</launch>

@@ -1,0 +1,6 @@
+<launch>	
+  <!-- Launch Follow Me Controller -->
+  <node pkg="follow_me" type="follow_me.py" name="follow_me" output="screen">
+      <rosparam command="load" file="$(find follow_me)/config/config.yaml" />
+  </node>
+</launch>

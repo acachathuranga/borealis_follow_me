@@ -1,0 +1,34 @@
+# Human Pose Topic 
+human_pose_topic: '/HumanPose'
+# Human Path Topic 
+human_path_topic: '/HumanPath'
+
+# UAV Pose Topic 
+uav_pose_topic: '/UAV3Pose'
+# UAV Command Velocity Topic
+cmd_vel_topic: '/uav3/mobile_base/commands/velocity'
+# UAV Following Distance
+follow_distance: 3.0  # m
+
+#####################################################
+
+# Feedback Controller Gains
+angular_Kp: 1.00
+angular_Kd: 0.00
+angular_Ki: 0.06
+max_angular_velocity: 2     # rad/s
+
+linear_velocity_gain: 1     # m/s
+max_linear_velocity: 0.9    # m/s
+distance_tolerance: 0.1    # m
+
+
+# Obstacle Avoidance Parameters
+obstacle_range: 0.5
+avoidance_gain: 0.3
+obs_vel_attenuation: 10
+
+# UAV Sonar Topics
+sonar_left: '/uav3/sonar/sonar_left'
+sonar_mid: '/uav3/sonar/sonar_mid'
+sonar_right: '/uav3/sonar/sonar_right'
