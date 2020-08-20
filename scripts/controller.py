@@ -34,14 +34,14 @@ class RobotController():
         self.pose = [0,0,0]                 # x, y, theta
 
         self.controller_last_timestamp = rospy.get_time()
-        self.angular_Kp = rospy.get_param(rospy.get_name()+'/angular_Kp', 1.0)
-        self.angular_Kd = rospy.get_param(rospy.get_name()+'/angular_Kd', 0.0)
-        self.angular_Ki = rospy.get_param(rospy.get_name()+'/angular_Ki', 0.06)
-        self.max_angular_velocity = rospy.get_param(rospy.get_name()+'/max_angular_velocity', 2.0)
-        self.linear_velocity_gain = rospy.get_param(rospy.get_name()+'/linear_velocity_gain', 2.0)
-        self.max_linear_velocity = rospy.get_param(rospy.get_name()+'/max_linear_velocity', 0.7)
-        self.distance_tolerance = rospy.get_param(rospy.get_name()+'/distance_tolerance', 0.3)
-        self.obs_vel_attenuation = rospy.get_param(rospy.get_name()+'/obs_vel_attenuation', 10)
+        self.angular_Kp = rospy.get_param(rospy.get_name()+'/angular_Kp')                           #, 1.0
+        self.angular_Kd = rospy.get_param(rospy.get_name()+'/angular_Kd')                           #, 0.0
+        self.angular_Ki = rospy.get_param(rospy.get_name()+'/angular_Ki')                           #, 0.06
+        self.max_angular_velocity = rospy.get_param(rospy.get_name()+'/max_angular_velocity')       #, 2.0
+        self.linear_velocity_gain = rospy.get_param(rospy.get_name()+'/linear_velocity_gain')       #, 2.0
+        self.max_linear_velocity = rospy.get_param(rospy.get_name()+'/max_linear_velocity')         #, 0.7
+        self.distance_tolerance = rospy.get_param(rospy.get_name()+'/distance_tolerance')           #, 0.3
+        self.obs_vel_attenuation = rospy.get_param(rospy.get_name()+'/obs_vel_attenuation')         #, 10
         self.heading_error_prev = 0.0
         self.heading_error_sum = 0.0
         self.linear_error_pres = 0.0

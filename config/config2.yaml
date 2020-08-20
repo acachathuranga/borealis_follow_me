@@ -10,6 +10,9 @@ cmd_vel_topic: '/uav2/mobile_base/commands/velocity'
 # UAV Following Distance
 follow_distance: 2.0  # m
 
+# Activation Service
+activation_service: '/uav1/follow_me/enable'
+
 #####################################################
 
 # Feedback Controller Gains

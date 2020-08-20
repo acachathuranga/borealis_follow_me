@@ -16,11 +16,11 @@ class CheckObstacles():
         self.sonar_mid = None
         self.sonar_right = None
         
-        sonar_left_topic = rospy.get_param(rospy.get_name()+'/sonar_left', '/uav1/sonar/sonar_left')
-        sonar_mid_topic = rospy.get_param(rospy.get_name()+'/sonar_mid', '/uav1/sonar/sonar_mid')
-        sonar_right_topic = rospy.get_param(rospy.get_name()+'/sonar_right', '/uav1/sonar/sonar_right')
-        self.obstacle_range = rospy.get_param(rospy.get_name()+'/obstacle_range', 0.5)
-        self.avoidance_gain = rospy.get_param(rospy.get_name()+'/avoidance_gain', 0.3)
+        sonar_left_topic = rospy.get_param(rospy.get_name()+'/sonar_left')                              #, '/uav1/sonar/sonar_left'
+        sonar_mid_topic = rospy.get_param(rospy.get_name()+'/sonar_mid')                                #, '/uav1/sonar/sonar_mid'
+        sonar_right_topic = rospy.get_param(rospy.get_name()+'/sonar_right')                            #, '/uav1/sonar/sonar_right'
+        self.obstacle_range = rospy.get_param(rospy.get_name()+'/obstacle_range')                       #, 0.5
+        self.avoidance_gain = rospy.get_param(rospy.get_name()+'/avoidance_gain')                       #, 0.3
 
         self.sonar_left_sub = rospy.Subscriber(sonar_left_topic, Range, self.sonar_left_cb)
         self.sonar_mid_sub = rospy.Subscriber(sonar_mid_topic, Range, self.sonar_mid_cb)

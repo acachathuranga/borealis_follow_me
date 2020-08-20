@@ -4,11 +4,14 @@ human_pose_topic: '/HumanPose'
 human_path_topic: '/HumanPath'
 
 # UAV Pose Topic 
-uav_pose_topic: '/UAV1Pose'
+# uav_pose_topic: '/UAV1Pose'
 # UAV Command Velocity Topic
-cmd_vel_topic: '/uav1/mobile_base/commands/velocity'
+cmd_vel_topic: 'mobile_base/commands/velocity'
 # UAV Following Distance
-follow_distance: 1.0  # m
+#follow_distance: 1.0  # m
+
+# Activation Service
+activation_service: 'follow_me/enable'
 
 #####################################################
 
@@ -29,6 +32,6 @@ avoidance_gain: 0.3
 obs_vel_attenuation: 10
 
 # UAV Sonar Topics
-sonar_left: '/uav1/sonar/sonar_left'
-sonar_mid: '/uav1/sonar/sonar_mid'
-sonar_right: '/uav1/sonar/sonar_right'
+sonar_left: 'sonar/sonar_left'
+sonar_mid: 'sonar/sonar_mid'
+sonar_right: 'sonar/sonar_right'

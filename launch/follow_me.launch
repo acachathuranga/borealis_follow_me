@@ -1,6 +1,18 @@
 <launch>	
-  <!-- Launch Follow Me Controller -->
-  <node pkg="follow_me" type="follow_me.py" name="follow_me" output="screen">
+  <!-- Robot/UAV Name -->
+  <!--arg name="robot_name" default="uav1"/-->
+  <!--arg name="robot_pose_topic" default="UAV1Pose"/-->
+
+  <arg name="robot_name"/>
+  <arg name="robot_pose_topic"/>
+  <arg name="follow_distance"/>
+
+  <group ns="$(arg robot_name)">
+    <!-- Launch Follow Me Controller -->
+    <node pkg="follow_me" type="follow_me.py" name="follow_me" output="screen">
+      <param name="uav_pose_topic" value="$(arg robot_pose_topic)" />
+      <param name="follow_distance" value="$(arg follow_distance)" />
       <rosparam command="load" file="$(find follow_me)/config/config.yaml" />
-  </node>
+    </node>
+  </group>
 </launch>
