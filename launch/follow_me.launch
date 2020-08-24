@@ -11,6 +11,7 @@
   <!--node pkg="rosserial_python" name="arduino" type="serial_node.py" args="/dev/Leonardo" output="screen">
   </node-->
 
+  <remap from="/$(arg robot_name)/follow_me_velocity_smoother/raw_cmd_vel" to="/$(arg robot_name)_follow_me_velocity_smoother/raw_cmd_vel"/>
   <group ns="$(arg robot_name)">
     <!-- Launch Follow Me Controller -->
     <node pkg="follow_me" type="follow_me.py" name="follow_me" output="screen">

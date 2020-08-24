@@ -18,7 +18,7 @@ human_path_sub = None
 uav_pose_sub = None
 cmd_vel_pub = None
 robot_controller = None
-autonomous_mode = False
+autonomous_mode = True
 
 def human_pose_cb(pose):
     robot_controller.updateLeaderPose(pose)

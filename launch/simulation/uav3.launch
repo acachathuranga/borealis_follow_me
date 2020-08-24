@@ -1,0 +1,8 @@
+<launch>
+  <!-- UAV3 Follower -->
+  <include file="$(find follow_me)/launch/follow_me.launch">
+    <arg name="robot_name" value="uav3" />
+    <arg name="robot_pose_topic" value="/UAV3Pose" />
+    <arg name="follow_distance" value="3.0" />
+  </include>
+</launch>

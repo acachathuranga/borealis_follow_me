@@ -6,7 +6,7 @@
   <node pkg="follow_me" type="pose_publisher.py" name="gazebo_pose_publisher" output="screen"/>
 
   <!--  Custom Rviz -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find follow_me)/launch/simulation/simulation.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find follow_me)/launch/simulation/debug.rviz"/>
 
   <!--  Teleop joystick PS4 -->
   <include file="$(find follow_me)/launch/simulation/ps4_joystick.launch"/>
@@ -16,26 +16,26 @@
 
 
   <!-- UAV1 Follower -->
-  <include file="$(find follow_me)/launch/follow_me.launch">
+  <!--include file="$(find follow_me)/launch/follow_me.launch">
     <arg name="robot_name" value="uav1" />
     <arg name="robot_pose_topic" value="/UAV1Pose" />
     <arg name="follow_distance" value="1.0" />
-  </include>
+  </include-->
 
 
   <!-- UAV2 Follower -->
-  <include file="$(find follow_me)/launch/follow_me.launch">
+  <!--include file="$(find follow_me)/launch/follow_me.launch">
     <arg name="robot_name" value="uav2" />
     <arg name="robot_pose_topic" value="/UAV2Pose" />
     <arg name="follow_distance" value="2.0" />
-  </include>
+  </include-->
 
   <!-- UAV3 Follower -->
-  <include file="$(find follow_me)/launch/follow_me.launch">
+  <!--include file="$(find follow_me)/launch/follow_me.launch">
     <arg name="robot_name" value="uav3" />
     <arg name="robot_pose_topic" value="/UAV3Pose" />
     <arg name="follow_distance" value="3.0" />
-  </include>
+  </include-->
 
   
 </launch>

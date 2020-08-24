@@ -3,13 +3,16 @@
 -->
 <launch>
   <arg name="base_name"/>
+  
+  <!-- mobile base nodelet manager -->
+  <node pkg="nodelet" type="nodelet" name="$(arg base_name)_nodelet_manager" args="manager"/>
 
   <node pkg="nodelet" type="nodelet" name="$(arg base_name)_follow_me_velocity_smoother" args="load yocs_velocity_smoother/VelocitySmootherNodelet $(arg base_name)_nodelet_manager">
     <rosparam file="$(find follow_me)/config/smoother.yaml" command="load"/>
-    <remap from="$(arg base_name)_follow_me_velocity_smoother/smooth_cmd_vel" to="$(arg base_name)_cmd_vel_mux/input/navi"/>
+    <remap from="$(arg base_name)_follow_me_velocity_smoother/smooth_cmd_vel" to="$(arg base_name)/mobile_base/commands/velocity"/>
 
     <!-- Robot velocity feedbacks; use the one configured as base default -->
     <remap from="$(arg base_name)_follow_me_velocity_smoother/odometry" to="$(arg base_name)/odom"/>
-    <remap from="$(arg base_name)_follow_me_velocity_smoother/robot_cmd_vel" to="$(arg base_name)/commands/velocity"/>
+    <remap from="$(arg base_name)_follow_me_velocity_smoother/robot_cmd_vel" to="$(arg base_name)/mobile_base/commands/velocity"/>
   </node>
 </launch>

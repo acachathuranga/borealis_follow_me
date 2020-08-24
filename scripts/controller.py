@@ -46,7 +46,7 @@ class RobotController():
         self.heading_error_sum = 0.0
         self.linear_error_pres = 0.0
 
-        self.check_obstacles = CheckObstacles()
+        # self.check_obstacles = CheckObstacles()
 
     def updateLeaderPose(self, pose):
         """
@@ -135,7 +135,7 @@ class RobotController():
         try:
             current_pose, target_pose = self.extract_poses()
         except Exception as e: 
-            # print(e)
+            print(e)
             return
 
         x, y, theta = current_pose
@@ -159,19 +159,26 @@ class RobotController():
         #### Generating Velocity ####
         cmd_vel = Twist()
         
-        # Linear Velocity Attenuation (In case there is significant heading error)
-        linear_velocity_attenuation = np.clip( math.fabs(angular_feedback), a_min=1, a_max=10)
-        cmd_vel.linear.x = distance_error * self.linear_velocity_gain / linear_velocity_attenuation
+        # Angular Velocity
         cmd_vel.angular.z = angular_feedback
+        cmd_vel.angular.z = np.clip(cmd_vel.angular.z, a_min=-self.max_angular_velocity, a_max=self.max_angular_velocity)
+        # Linear Velocity
+        cmd_vel.linear.x = distance_error * self.linear_velocity_gain
+        cmd_vel.linear.x = np.clip(cmd_vel.linear.x, a_min=-self.max_linear_velocity, a_max=self.max_linear_velocity)
+        # Linear Velocity attenuation
+        linear_velocity_attenuation = np.clip( self.obs_vel_attenuation * math.fabs(cmd_vel.angular.z), a_min=1, a_max=10)
+        cmd_vel.linear.x /= linear_velocity_attenuation
+        
 
-        # Obstacle Avoidance
-        if self.obstacle_avoidance:
-            obstacle_avoidance_steering, front_proximity = self.check_obstacles.caculate_steering()
-            cmd_vel.angular.z += obstacle_avoidance_steering
-            obstacle_avoidance_linear_velocity_attenuation = np.clip( self.obs_vel_attenuation * math.fabs(obstacle_avoidance_steering), a_min=1, a_max=50) / front_proximity
-            cmd_vel.linear.x /= obstacle_avoidance_linear_velocity_attenuation
+        obstacle_avoidance_steering = 0
+        # # Obstacle Avoidance
+        # if self.obstacle_avoidance:
+        #     obstacle_avoidance_steering, front_proximity = self.check_obstacles.caculate_steering()
+        #     cmd_vel.angular.z += obstacle_avoidance_steering
+        #     obstacle_avoidance_linear_velocity_attenuation = np.clip( self.obs_vel_attenuation * math.fabs(obstacle_avoidance_steering), a_min=1, a_max=50) / front_proximity
+        #     cmd_vel.linear.x /= obstacle_avoidance_linear_velocity_attenuation
 
-        # print ("LinErr: %.3f, LinVel: %.3f, AngErr: %.3f, AngVel: %.3f, ObsSteer: %0.3f" %(distance_error, cmd_vel.linear.x, heading_error, cmd_vel.angular.z, obstacle_avoidance_steering))
+        print ("LinErr: %.3f, LinVel: %.3f, AngErr: %.3f, AngVel: %.3f, ObsSteer: %0.3f" %(distance_error, cmd_vel.linear.x, heading_error, cmd_vel.angular.z, obstacle_avoidance_steering))
         
         # Limiting Velocities
         cmd_vel.linear.x = np.clip(cmd_vel.linear.x, a_min=-self.max_linear_velocity, a_max=self.max_linear_velocity)

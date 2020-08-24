@@ -6,7 +6,7 @@ human_path_topic: '/HumanPath'
 # UAV Pose Topic 
 # uav_pose_topic: '/UAV1Pose'
 # UAV Command Velocity Topic
-cmd_vel_topic: '/uav1_follow_me_velocity_smoother/raw_cmd_vel'
+cmd_vel_topic: 'follow_me_velocity_smoother/raw_cmd_vel'
 # UAV Following Distance
 #follow_distance: 1.0  # m
 
