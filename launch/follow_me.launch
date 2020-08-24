@@ -7,6 +7,10 @@
   <arg name="robot_pose_topic"/>
   <arg name="follow_distance"/>
 
+  <!-- Launch ROS serial node -->
+  <!--node pkg="rosserial_python" name="arduino" type="serial_node.py" args="/dev/Leonardo" output="screen">
+  </node-->
+
   <group ns="$(arg robot_name)">
     <!-- Launch Follow Me Controller -->
     <node pkg="follow_me" type="follow_me.py" name="follow_me" output="screen">
@@ -15,4 +19,9 @@
       <rosparam command="load" file="$(find follow_me)/config/config.yaml" />
     </node>
   </group>
+
+  <!--  smooths inputs from cmd_vel_mux/input/teleop_raw to cmd_vel_mux/input/teleop -->
+  <include file="$(find follow_me)/launch/includes/vel_smoother.launch">
+    <arg name="base_name" value="$(arg robot_name)"/>
+  </include>
 </launch>

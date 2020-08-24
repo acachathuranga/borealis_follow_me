@@ -58,13 +58,17 @@ class RobotController():
         q = pose.pose.pose.orientation
         roll, pitch, yaw = transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
         
-        distance = None
         if len(self.path) == 0:
+            # Path starting point
             distance = 0
+            self.path.append([x, y, yaw, distance])
         else:
             x_last, y_last, theta, distance_last = self.path[-1]
             distance = distance_last + np.sqrt( np.power(x - x_last, 2) + np.power(y - y_last, 2) )
-        self.path.append([x, y, yaw, distance])
+            # Append to path if movment is observed. Else ignore
+            if distance > 0.1: 
+                self.path.append([x, y, yaw, distance]) 
+            
         self.thread_lock.release()
 
     def updatePose(self, pose):
@@ -108,16 +112,22 @@ class RobotController():
         # Path distance at target position
         target_dist = path[-1,3] - self.distance
         # Filter by distance
-        far_poses = path[path[:,3] < target_dist]
+        far_pose_ids = np.where(path[:,3] < target_dist) #path[path[:,3] < target_dist]
 
-        if len(far_poses) != 0:
-            target_pose = far_poses[-1,:3]
+        if len(far_pose_ids[0]) != 0:
+            target_pose_id = far_pose_ids[0][-1]
+            target_pose = path[target_pose_id,:3]
+
+            # Delete Path history
+            self.thread_lock.acquire()
+            self.path = path[target_pose_id:,:].tolist()
+            self.thread_lock.release()
         else:
             # No target
             raise ValueError("No target")
             return
-        current_pose = np.array(self.readPose())
 
+        current_pose = np.array(self.readPose())
         return current_pose, target_pose
    
     def controller(self):
@@ -130,6 +140,7 @@ class RobotController():
 
         x, y, theta = current_pose
         x_t, y_t, theta_t = target_pose
+        print (target_pose)
 
         target_heading = math.atan2(y_t-y, x_t-x)
         heading_error = self.normalize_angle(target_heading - theta)
@@ -155,9 +166,9 @@ class RobotController():
 
         # Obstacle Avoidance
         if self.obstacle_avoidance:
-            obstacle_avoidance_steering = self.check_obstacles.caculate_steering()
+            obstacle_avoidance_steering, front_proximity = self.check_obstacles.caculate_steering()
             cmd_vel.angular.z += obstacle_avoidance_steering
-            obstacle_avoidance_linear_velocity_attenuation = np.clip( self.obs_vel_attenuation * math.fabs(obstacle_avoidance_steering), a_min=1, a_max=50)
+            obstacle_avoidance_linear_velocity_attenuation = np.clip( self.obs_vel_attenuation * math.fabs(obstacle_avoidance_steering), a_min=1, a_max=50) / front_proximity
             cmd_vel.linear.x /= obstacle_avoidance_linear_velocity_attenuation
 
         # print ("LinErr: %.3f, LinVel: %.3f, AngErr: %.3f, AngVel: %.3f, ObsSteer: %0.3f" %(distance_error, cmd_vel.linear.x, heading_error, cmd_vel.angular.z, obstacle_avoidance_steering))
@@ -189,19 +200,19 @@ class RobotController():
         
 
 class ClassTimer():
-        def __init__(self, callback, interval):
-            self.callback = callback
-            self.interval = interval
-            self.timer = Timer(self.interval, self.cb)
-            self.timer.start()
+    def __init__(self, callback, interval):
+        self.callback = callback
+        self.interval = interval
+        self.timer = Timer(self.interval, self.cb)
+        self.timer.start()
 
-        def cb(self):
-            self.callback()
-            self.timer = Timer(self.interval, self.cb)
-            self.timer.start()
-    
-        def stop(self, *args):
-            self.timer.cancel()
+    def cb(self):
+        self.timer = Timer(self.interval, self.cb)
+        self.timer.start()
+        self.callback()
+
+    def stop(self, *args):
+        self.timer.cancel()
 
     
         

@@ -6,7 +6,7 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 import rospy
 import sys
-from nav_msgs.msg import Path
+from nav_msgs.msg import Path, Odometry
 from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Twist
 from std_srvs.srv._SetBool import SetBool, SetBoolRequest, SetBoolResponse
 from threading import Timer
@@ -43,6 +43,22 @@ def set_mode(req):
         msg = "Autonomous Mode OFF"
     print (rospy.get_name() + ": " + msg)
     return SetBoolResponse(True, msg)
+
+########### DEBUGGING #########
+# def leader_pose_cb(odom):
+#     pose = PoseWithCovarianceStamped()
+
+#     pose.header = odom.header
+#     pose.pose.pose =  odom.pose.pose
+#     robot_controller.updateLeaderPose(pose)
+
+# def self_pose_cb(odom):
+#     pose = PoseWithCovarianceStamped()
+
+#     pose.header = odom.header
+#     pose.pose.pose =  odom.pose.pose
+#     robot_controller.updatePose(pose)
+###############################
     
 def follow_me():
     
@@ -58,6 +74,11 @@ def follow_me():
     activation_service = rospy.get_param(rospy.get_name()+'/activation_service')    #, '/uav1/follow_me/enable'
 
     follow_distance = rospy.get_param(rospy.get_name()+'/follow_distance')          #, 2
+
+    ##### DEBUGGING ######
+    # leader_pose_sub = rospy.Subscriber('/uav2/odom', Odometry, leader_pose_cb)
+    # leader_pose_sub = rospy.Subscriber('/uav1/odom', Odometry, self_pose_cb)
+    ######################
 
     # Logging Parameters
     print ("")

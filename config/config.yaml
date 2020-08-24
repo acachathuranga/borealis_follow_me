@@ -6,7 +6,7 @@ human_path_topic: '/HumanPath'
 # UAV Pose Topic 
 # uav_pose_topic: '/UAV1Pose'
 # UAV Command Velocity Topic
-cmd_vel_topic: 'mobile_base/commands/velocity'
+cmd_vel_topic: '/uav1_follow_me_velocity_smoother/raw_cmd_vel'
 # UAV Following Distance
 #follow_distance: 1.0  # m
 
@@ -21,9 +21,9 @@ angular_Kd: 0.00
 angular_Ki: 0.06
 max_angular_velocity: 2     # rad/s
 
-linear_velocity_gain: 1     # m/s
-max_linear_velocity: 0.9    # m/s
-distance_tolerance: 0.1    # m
+linear_velocity_gain: 0.5     # m/s
+max_linear_velocity: 0.7    # m/s
+distance_tolerance: 0.2    # m
 
 
 # Obstacle Avoidance Parameters
