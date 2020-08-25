@@ -137,7 +137,7 @@ class CheckObstacles():
         else:
             angular_vel += feedback
             state = True
-        print (feedback, mid)
+        # print (feedback, mid)
         return state, linear_vel, angular_vel
 
     def sensor_monitor(self):

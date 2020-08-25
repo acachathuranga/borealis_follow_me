@@ -68,9 +68,10 @@ class RobotController():
             self.path.append([x, y, yaw, distance])
         else:
             x_last, y_last, theta, distance_last = self.path[-1]
-            distance = distance_last + np.sqrt( np.power(x - x_last, 2) + np.power(y - y_last, 2) )
+            delta_distance = np.sqrt( np.power(x - x_last, 2) + np.power(y - y_last, 2) )
+            distance = distance_last + delta_distance
             # Append to path if movment is observed. Else ignore
-            if distance > 0.1: 
+            if delta_distance > 0.2: 
                 self.path.append([x, y, yaw, distance]) 
             
         self.thread_lock.release()
@@ -297,6 +298,7 @@ class RobotController():
         cmd_vel.linear.x = np.clip(cmd_vel.linear.x, a_min=-self.max_linear_velocity, a_max=self.max_linear_velocity)
         cmd_vel.angular.z = np.clip(cmd_vel.angular.z, a_min=-self.max_angular_velocity, a_max=self.max_angular_velocity)
 
+        print ("pose: %.1f,%.1f, T_pose: %.1f,%.1f, LinVel: %.2f AngVel: %.2f, distErr: %.2f, headErr: %.2f" %(x,y,x_t,y_t,cmd_vel.linear.x,cmd_vel.angular.z, distance_error, heading_error)) 
         # print ("LinErr: %.3f, LinVel: %.3f, AngErr: %.3f, AngVel: %.3f, ObsSteer: %0.3f" %(distance_error, cmd_vel.linear.x, heading_error, cmd_vel.angular.z, obstacle_avoidance_steering))
         self.publish_velocity(cmd_vel)
 
