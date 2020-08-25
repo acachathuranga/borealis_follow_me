@@ -28,9 +28,13 @@ class CheckObstacles():
         self.sonar_mid_time_stamp = rospy.get_time()
         self.sonar_right_time_stamp = rospy.get_time()
 
-        self.sonar_left_sub = rospy.Subscriber(sonar_left_topic, Float32, self.sonar_left_cb)
-        self.sonar_mid_sub = rospy.Subscriber(sonar_mid_topic, Float32, self.sonar_mid_cb)
-        self.sonar_right_sub = rospy.Subscriber(sonar_right_topic, Float32, self.sonar_right_cb)
+        # self.sonar_left_sub = rospy.Subscriber(sonar_left_topic, Float32, self.sonar_left_cb)
+        # self.sonar_mid_sub = rospy.Subscriber(sonar_mid_topic, Float32, self.sonar_mid_cb)
+        # self.sonar_right_sub = rospy.Subscriber(sonar_right_topic, Float32, self.sonar_right_cb)
+
+        self.sonar_left_sub = rospy.Subscriber(sonar_left_topic, Range, self.sonar_left_cb)
+        self.sonar_mid_sub = rospy.Subscriber(sonar_mid_topic, Range, self.sonar_mid_cb)
+        self.sonar_right_sub = rospy.Subscriber(sonar_right_topic, Range, self.sonar_right_cb)
 
         # Sensor Status monitoring
         self.sensor_monitoring_interval = 1
@@ -40,19 +44,22 @@ class CheckObstacles():
 
     def sonar_left_cb(self, range):
         self.threading_lock.acquire()
-        self.sonar_left = range.data / 100.0
+        self.sonar_left = range.range
+        # self.sonar_left = range.data / 100.0
         self.sonar_left_time_stamp = rospy.get_time()
         self.threading_lock.release()
 
     def sonar_mid_cb(self, range):
         self.threading_lock.acquire()
-        self.sonar_mid = range.data / 100.0
+        self.sonar_mid = range.range
+        # self.sonar_mid = range.data / 100.0
         self.sonar_mid_time_stamp = rospy.get_time()
         self.threading_lock.release()
 
     def sonar_right_cb(self, range):
         self.threading_lock.acquire()
-        self.sonar_right = range.data / 100.0
+        self.sonar_right = range.range
+        # self.sonar_right = range.data / 100.0
         self.sonar_right_time_stamp = rospy.get_time()
         self.threading_lock.release()
 
@@ -79,10 +86,10 @@ class CheckObstacles():
         if mid > self.obstacle_range: mid = 1
         if right > self.obstacle_range: right = 1
 
-        # Division By Zero avoidance
-        if left == 0: left = 0.0001
-        if mid == 0: mid = 0.0001
-        if right == 0: right = 0.0001
+        # Ignoring 0 values (Due to sensor reading out of range)
+        if left == 0: left = 1
+        if mid == 0: mid = 1
+        if right == 0: right = 1
 
         # Dynamic repulsion
         feedback = self.avoidance_gain * ( (-1.0/left) + (1.0/right) )
@@ -94,6 +101,44 @@ class CheckObstacles():
             linear_vel_attenuation = mid
 
         return feedback, mid
+
+    def avoid_obstacles(self, linear_vel, angular_vel):
+        """
+            Modifies a given command velocity, to avoid obstacles
+
+            Returns state, linear, angular velocities
+
+            if state == False, the goal is unreachable
+        """
+        self.threading_lock.acquire()
+        left = self.sonar_left
+        mid = self.sonar_mid
+        right = self.sonar_right
+        self.threading_lock.release()
+        
+        if left > self.obstacle_range: left = 1
+        if mid > self.obstacle_range: mid = 1
+        if right > self.obstacle_range: right = 1
+
+        # Ignoring 0 values (Due to sensor reading out of range)
+        if left == 0: left = 1
+        if mid == 0: mid = 1
+        if right == 0: right = 1
+
+        # Dynamic repulsion
+        feedback = self.avoidance_gain * ( (-1.0/left) + (1.0/right) )
+        # Scaling feedback
+        feedback = feedback / mid
+        
+        state = False
+        if (mid < (self.obstacle_range / 2)) or (math.fabs(feedback) > 1):
+            linear_vel = 0
+            angular_vel += feedback
+        else:
+            angular_vel += feedback
+            state = True
+        print (feedback, mid)
+        return state, linear_vel, angular_vel
 
     def sensor_monitor(self):
         time = rospy.get_time()

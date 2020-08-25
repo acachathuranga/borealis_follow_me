@@ -3,7 +3,7 @@
   <include file="$(find follow_me)/launch/follow_me.launch">
     <arg name="robot_name" value="uav2" />
     <arg name="robot_pose_topic" value="/UAV2Pose" />
-    <arg name="follow_distance" value="2.0" />
+    <arg name="follow_distance" value="3.0" />
   </include>
 
 </launch>

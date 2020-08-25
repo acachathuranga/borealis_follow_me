@@ -44,7 +44,7 @@ def set_mode(req):
     print (rospy.get_name() + ": " + msg)
     return SetBoolResponse(True, msg)
 
-########### DEBUGGING #########
+# ########## DEBUGGING #########
 # def leader_pose_cb(odom):
 #     pose = PoseWithCovarianceStamped()
 
@@ -58,7 +58,7 @@ def set_mode(req):
 #     pose.header = odom.header
 #     pose.pose.pose =  odom.pose.pose
 #     robot_controller.updatePose(pose)
-###############################
+# ##############################
     
 def follow_me():
     
@@ -75,10 +75,10 @@ def follow_me():
 
     follow_distance = rospy.get_param(rospy.get_name()+'/follow_distance')          #, 2
 
-    ##### DEBUGGING ######
+    # #### DEBUGGING ######
     # leader_pose_sub = rospy.Subscriber('/uav2/odom', Odometry, leader_pose_cb)
     # leader_pose_sub = rospy.Subscriber('/uav1/odom', Odometry, self_pose_cb)
-    ######################
+    # #####################
 
     # Logging Parameters
     print ("")

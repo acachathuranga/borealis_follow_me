@@ -53,8 +53,7 @@ def extractPose(link_states, tag):
     return pose_stamped
 
 def publishHumanPose(link_states):
-    pass
-    # human_pub.publish(extractPose(link_states, human_tag))
+    human_pub.publish(extractPose(link_states, human_tag))
 
 def publishUAV1Pose(link_states):
     uav1_pub.publish(extractPose(link_states, uav1_tag))

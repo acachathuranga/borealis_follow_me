@@ -21,14 +21,15 @@ angular_Kd: 0.00
 angular_Ki: 0.06
 max_angular_velocity: 2     # rad/s
 
-linear_velocity_gain: 0.5     # m/s
+linear_velocity_gain: 2     # m/s
+linear_velocity_attenuation: 2 
 max_linear_velocity: 0.7    # m/s
-distance_tolerance: 0.2    # m
+distance_tolerance: 0.4    # m
 
 
 # Obstacle Avoidance Parameters
-obstacle_range: 0.5
-avoidance_gain: 0.3
+obstacle_range: 1.0
+avoidance_gain: 0.5
 obs_vel_attenuation: 10
 
 # UAV Sonar Topics
